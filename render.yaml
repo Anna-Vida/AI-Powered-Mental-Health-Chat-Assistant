@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: mindchat
+    runtime: node
+    buildCommand: ''
+    startCommand: node server.js
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false

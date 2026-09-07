@@ -37,6 +37,16 @@ node server.js
 ```
 Then open `http://localhost:3000`.
 
+### 4. Publish for mobile and web browsers
+The chat needs a Node server because the Gemini key must remain private. To publish it:
+
+1. Create a web service on [Render](https://render.com) from this GitHub repository.
+2. Render will detect `render.yaml` and use `node server.js`.
+3. Add `GEMINI_API_KEY` under the service's environment variables.
+4. Deploy and open the generated `onrender.com` URL on any phone or computer.
+
+GitHub Pages cannot run the chat server, so it is not suitable for the complete app.
+
 ---
 
 ## 🗂 Project Structure

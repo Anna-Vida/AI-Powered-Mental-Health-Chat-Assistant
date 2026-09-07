@@ -49,6 +49,11 @@ The chat needs a Node server because the Gemini key must remain private. To publ
 
 GitHub Pages cannot run the chat server, so it is not suitable for the complete app.
 
+### 5. Enable conversation storage
+Create a Render PostgreSQL database and add its internal connection string to the web service as `DATABASE_URL`. Also add a long random value as `ADMIN_TOKEN`. The protected admin endpoint is `/api/admin/conversations` and requires the `x-admin-token` header.
+
+Messages are saved only after the user gives consent. This first version uses a browser conversation ID; add real user authentication before treating it as an account-level privacy boundary.
+
 ---
 
 ## 🗂 Project Structure

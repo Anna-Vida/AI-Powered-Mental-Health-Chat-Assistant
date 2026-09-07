@@ -287,3 +287,15 @@ body {
   .app { border-radius: 0; height: 100vh; max-height: none; border: none; }
   .bubble { max-width: 85%; }
 }
+
+.consent-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.consent-row input { margin-top: 2px; accent-color: var(--green-600); }

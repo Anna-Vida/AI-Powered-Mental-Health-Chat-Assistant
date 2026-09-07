@@ -1,6 +1,7 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
+const { Pool } = require('pg');
 
 const ROOT_DIR = __dirname;
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,34 @@ function loadEnv() {
 }
 
 loadEnv();
+
+const database = process.env.DATABASE_URL
+  ? new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  })
+  : null;
+
+async function initializeDatabase() {
+  if (!database) return;
+  await database.query(`
+    CREATE TABLE IF NOT EXISTS chat_messages (
+      id BIGSERIAL PRIMARY KEY,
+      conversation_id UUID NOT NULL,
+      role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
+      content TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+}
+
+async function saveMessages(conversationId, userMessage, assistantMessage) {
+  if (!database || !conversationId) return;
+  await database.query(
+    'INSERT INTO chat_messages (conversation_id, role, content) VALUES ($1, $2, $3), ($1, $4, $5)',
+    [conversationId, 'user', userMessage, 'assistant', assistantMessage],
+  );
+}
 
 function sendJson(response, status, body) {
   response.writeHead(status, { 'Content-Type': 'application/json' });
@@ -91,16 +120,39 @@ async function handleChat(request, response) {
       ?.map(part => part.text || '')
       .join('')
       .trim();
-    sendJson(response, 200, { content: [{ text: reply || "I'm here with you. Can you tell me more?" }] });
+    const finalReply = reply || "I'm here with you. Can you tell me more?";
+    await saveMessages(requestBody.conversationId, requestBody.messages.at(-1)?.content, finalReply);
+    sendJson(response, 200, { content: [{ text: finalReply }] });
   } catch (error) {
     console.error('Chat proxy error:', error);
     sendJson(response, 400, { error: 'Invalid chat request' });
   }
 }
 
+async function handleAdminConversations(request, response) {
+  if (!database) {
+    sendJson(response, 503, { error: 'DATABASE_URL is missing from the server environment' });
+    return;
+  }
+  if (!process.env.ADMIN_TOKEN || request.headers['x-admin-token'] !== process.env.ADMIN_TOKEN) {
+    sendJson(response, 401, { error: 'Unauthorized' });
+    return;
+  }
+
+  const result = await database.query(
+    'SELECT id, conversation_id, role, content, created_at FROM chat_messages ORDER BY created_at DESC LIMIT 500',
+  );
+  sendJson(response, 200, result.rows);
+}
+
 const server = http.createServer((request, response) => {
   if (request.method === 'POST' && request.url === '/api/chat') {
     handleChat(request, response);
+  } else if (request.method === 'GET' && request.url === '/api/admin/conversations') {
+    handleAdminConversations(request, response).catch(error => {
+      console.error('Admin query error:', error);
+      sendJson(response, 500, { error: 'Could not load conversations' });
+    });
   } else if (request.method === 'GET') {
     serveFile(request, response);
   } else {
@@ -109,6 +161,11 @@ const server = http.createServer((request, response) => {
   }
 });
 
-server.listen(PORT, () => {
-  console.log(`MindChat running at http://localhost:${PORT}`);
-});
+initializeDatabase()
+  .then(() => server.listen(PORT, () => {
+    console.log(`MindChat running at http://localhost:${PORT}`);
+  }))
+  .catch(error => {
+    console.error('Database initialization error:', error);
+    process.exit(1);
+  });

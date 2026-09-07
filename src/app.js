@@ -22,6 +22,9 @@ let currentMood = null;
 const messagesEl = document.getElementById('messages');
 const inputEl    = document.getElementById('chat-input');
 const sendBtn    = document.getElementById('send-btn');
+const consentEl  = document.getElementById('save-consent');
+const conversationId = localStorage.getItem('mindchat-conversation-id') || crypto.randomUUID();
+localStorage.setItem('mindchat-conversation-id', conversationId);
 
 // ─── Mood Selection ───────────────────────────────────────────
 document.querySelectorAll('.mood-btn').forEach(btn => {
@@ -116,6 +119,11 @@ async function sendMessage() {
   const text = inputEl.value.trim();
   if (!text) return;
 
+  if (!consentEl.checked) {
+    addMessage('bot', 'Please check the consent box below if you want this conversation saved.');
+    return;
+  }
+
   addMessage('user', text.replace(/\n/g, '<br>'));
   conversationHistory.push({ role: 'user', content: text });
 
@@ -137,6 +145,7 @@ async function sendMessage() {
       body: JSON.stringify({
         system: SYSTEM_PROMPT + moodContext,
         messages: conversationHistory,
+        conversationId,
       }),
     });
 

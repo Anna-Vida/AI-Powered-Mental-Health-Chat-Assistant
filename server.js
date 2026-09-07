@@ -121,8 +121,9 @@ async function handleChat(request, response) {
       .join('')
       .trim();
     const finalReply = reply || "I'm here with you. Can you tell me more?";
-    await saveMessages(requestBody.conversationId, requestBody.messages.at(-1)?.content, finalReply);
     sendJson(response, 200, { content: [{ text: finalReply }] });
+    saveMessages(requestBody.conversationId, requestBody.messages.at(-1)?.content, finalReply)
+      .catch(error => console.error('Message save error:', error));
   } catch (error) {
     console.error('Chat proxy error:', error);
     sendJson(response, 400, { error: 'Invalid chat request' });

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MindChat — AI Mental Health Companion</title>
+  <link rel="stylesheet" href="src/style.css" />
+  <link rel="icon" href="public/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+  <div class="app">
+
+    <header class="header">
+      <div class="avatar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>
+      </div>
+      <div class="header-info">
+        <h1>MindChat</h1>
+        <p>Your compassionate AI companion</p>
+      </div>
+      <span class="status-dot"></span>
+    </header>
+
+    <div class="mood-bar">
+      <span class="mood-label">How are you feeling?</span>
+      <div class="moods">
+        <button class="mood-btn" data-mood="😔 Low">😔 Low</button>
+        <button class="mood-btn" data-mood="😐 Okay">😐 Okay</button>
+        <button class="mood-btn" data-mood="🙂 Good">🙂 Good</button>
+        <button class="mood-btn" data-mood="😊 Great">😊 Great</button>
+      </div>
+    </div>
+
+    <main class="messages" id="messages">
+      <div class="msg bot">
+        <div class="msg-avatar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>
+        </div>
+        <div>
+          <div class="bubble">
+            Hi there 👋 I'm MindChat — a safe, judgment-free space to talk about how you're feeling.<br><br>What's on your mind today?
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="input-area">
+      <div class="input-row">
+        <div class="input-wrap">
+          <textarea id="chat-input" placeholder="Share what's on your mind…" rows="1"></textarea>
+        </div>
+        <button class="send-btn" id="send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+      <p class="disclaimer">
+        Not a replacement for professional care. In crisis?
+        <a href="tel:988">Call or text 988</a>.
+      </p>
+    </footer>
+
+  </div>
+  <script src="src/app.js"></script>
+</body>
+</html>

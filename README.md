@@ -1,12 +1,14 @@
 # 🧠 MindChat — AI-Powered Mental Health Chat Assistant
 
-> A compassionate AI companion that offers empathetic, judgment-free conversations to support emotional well-being — powered by Claude.
+**Live demo:** https://ai-powered-mental-health-chat-assistant.onrender.com/
+
+> A compassionate AI companion that offers empathetic, judgment-free conversations to support emotional well-being — powered by Gemini.
 
 ---
 
 ## ✨ Features
 
-- 💬 **Real-time AI chat** — powered by Claude (claude-sonnet-4-6)
+- 💬 **Real-time AI chat** — powered by Google Gemini
 - 😊 **Mood selector** — log how you're feeling before chatting
 - 🌿 **Calm UI** — teal-green palette with full dark mode support
 - 🆘 **Crisis resources** — 988 Lifeline surfaces automatically when needed
